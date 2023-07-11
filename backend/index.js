@@ -56,7 +56,7 @@ app.post("/submit", async (req, res) => {
 });
 
 app.get("/tabledata", async (req, res) => {
-  const Query = "Select * FROM tbl_student";
+  const Query = "Select * FROM tbl_student ORDER BY rollno";
 
   await client.query(Query, async (error, result) => {
     if (error) {

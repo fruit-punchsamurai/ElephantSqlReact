@@ -1,8 +1,7 @@
 import React, { useState } from 'react'
 
 export default function Table({records}) {
-  const [tableData,setTableData] = useState([])
-  console.log(records);
+  
   return (
     
     <div className='Table'>
