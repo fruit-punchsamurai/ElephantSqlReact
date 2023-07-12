@@ -5,7 +5,7 @@ import axios from "axios";
 
 
 
-export default function Form({submitted,setSubmitted}){
+export default function Form({fetchAgain,setFetchAgain}){
     const[formData,setFormData] = useState({
         rollno:'',
         fname:'',
@@ -36,7 +36,7 @@ export default function Form({submitted,setSubmitted}){
                 department:'',
                 age:''
             })
-            setSubmitted(!submitted);
+            setFetchAgain(!fetchAgain);
         }
         catch(error){
             console.log(error);

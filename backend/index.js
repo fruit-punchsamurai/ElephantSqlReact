@@ -56,8 +56,8 @@ app.post("/submit", async (req, res) => {
 });
 
 app.get("/tabledata", async (req, res) => {
-  const Query = "Select * FROM tbl_student ORDER BY rollno";
-
+  const orderBy = req.query.orderBy;
+  const Query = "Select * FROM tbl_student ORDER BY " + orderBy;
   await client.query(Query, async (error, result) => {
     if (error) {
       console.log("Error retrieving data", error);
@@ -65,6 +65,23 @@ app.get("/tabledata", async (req, res) => {
     } else {
       console.log(result.rows);
       res.status(200).json(result.rows);
+    }
+  });
+});
+
+app.post("/delete", async (req, res) => {
+  const rollNos = req.body;
+  let text = "";
+  rollNos.map((rollno) => (text += rollno.toString() + ","));
+  text = text.slice(0, -1);
+  const Query = "DELETE FROM tbl_student WHERE rollno IN" + "(" + text + ")";
+  await client.query(Query, async (error, result) => {
+    if (error) {
+      console.log("Error deleting data : ", error);
+      res.status(500).send("Error deleting data");
+    } else {
+      console.log("Data deleted successfully");
+      res.status(200).send("Data deleted successfully");
     }
   });
 });
@@ -80,4 +97,5 @@ process.on("SIGINT", async () => {
   server.close(() => {
     console.log("Server Stopped");
   });
+  process.exit(0);
 });

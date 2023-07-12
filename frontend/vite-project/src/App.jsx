@@ -8,17 +8,20 @@ import axios from 'axios'
 function App() {
   const [showTable,setShowTable] = useState(false);
   const [tableData,setTableData] = useState([])
-  const [submitted,setSubmitted] = useState(false);
+  const [fetchAgain,setFetchAgain] = useState(false);
+  const [orderBy, setOrderBy] = useState('rollno');
   useEffect(()=>{
-   
-      fetchData();
-      console.log(showTable);
-    
-  },[showTable,submitted])
+      if (showTable) fetchData();
+       
+  },[showTable,fetchAgain])
 
   const fetchData = async ()=>{
     try{
-      const response = await axios.get('http://localhost:5000/tabledata');
+      const response = await axios.get('http://localhost:5000/tabledata',{
+        params:{
+          "orderBy":orderBy
+        }
+      });
       setTableData(response.data);
     }catch(error){
       console.log('Error fetching data :',error);
@@ -33,7 +36,7 @@ function App() {
   return (
     <div className='App'>
       <div className = 'Form'>
-        <Form submitted = {submitted} setSubmitted = {setSubmitted}/>
+        <Form fetchAgain = {fetchAgain} setFetchAgain = {setFetchAgain}/>
       </div>
       <div className='ButtonContainer'>
         <button onClick = {handleClick}>
@@ -43,7 +46,7 @@ function App() {
       <div className='TableContainer'>
         {showTable && 
         <div className='Table'>
-          <Table records = {tableData}/>
+          <Table records = {tableData} fetchAgain = {fetchAgain} setFetchAgain = {setFetchAgain} orderBy = {orderBy} setOrderBy = {setOrderBy}/>
         </div>
         }
       </div>
