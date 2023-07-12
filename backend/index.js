@@ -86,6 +86,31 @@ app.post("/delete", async (req, res) => {
   });
 });
 
+app.post("/update", async (req, res) => {
+  console.log("--------------------------------", req.body);
+  const Query =
+    "UPDATE tbl_student SET rollno = $1,firstname = $2,lastname = $3,address = $4,department = $5,age = $6 WHERE rollno = $7";
+  const values = [
+    req.body.rollno,
+    req.body.fname,
+    req.body.lname,
+    req.body.address,
+    req.body.department,
+    req.body.age,
+    req.body.oldrollno,
+  ];
+
+  await client.query(Query, values, (error) => {
+    if (error) {
+      console.log("Error updating data :", error);
+      res.status(500).send("Error updating data");
+    } else {
+      console.log("Data Updated successfully");
+      res.status(200).send("Data Updated successfully");
+    }
+  });
+});
+
 const server = app.listen(port, () => {
   console.log(`server listening at http://localhost:${port}`);
 });

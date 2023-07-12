@@ -10,6 +10,7 @@ function App() {
   const [tableData,setTableData] = useState([])
   const [fetchAgain,setFetchAgain] = useState(false);
   const [orderBy, setOrderBy] = useState('rollno');
+  
   useEffect(()=>{
       if (showTable) fetchData();
        
@@ -36,7 +37,7 @@ function App() {
   return (
     <div className='App'>
       <div className = 'Form'>
-        <Form fetchAgain = {fetchAgain} setFetchAgain = {setFetchAgain}/>
+        <Form fetchAgain = {fetchAgain} setFetchAgain = {setFetchAgain} update = {false}/>
       </div>
       <div className='ButtonContainer'>
         <button onClick = {handleClick}>

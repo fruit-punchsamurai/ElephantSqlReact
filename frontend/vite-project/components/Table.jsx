@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios';
-
+import Form from './Form';
 export default function Table({records, fetchAgain, setFetchAgain, orderBy,setOrderBy}) {
 
-  
   const[selectAll,setSelectAll] = useState(false);
   const[selectedItems,setSelectedItems] = useState([]);
+  const[showUpdateForm,setShowUpdateForm] = useState(false);
 
   const[showEdit,setShowEdit] = useState(false)
   const [showDelete,setShowDelete] = useState(false)
@@ -29,13 +29,14 @@ export default function Table({records, fetchAgain, setFetchAgain, orderBy,setOr
   }
   
   const handleEdit = ()=>{
-
+    setShowUpdateForm(!showUpdateForm)
   }
   const handleDelete = ()=>{
     try{
       axios.post('http://localhost:5000/delete',selectedItems)
       .then((res)=>{console.log(res);})
       setSelectedItems([])
+      setSelectAll(false)
       setFetchAgain(!fetchAgain);
     }
     catch(error){
@@ -58,13 +59,19 @@ export default function Table({records, fetchAgain, setFetchAgain, orderBy,setOr
       }
       else{
         setShowEdit(false);
+        setShowUpdateForm(false);
       }
     }
     else{
       setShowDelete(false);
       setShowEdit(false);
+      setShowUpdateForm(false);
     }
   },[selectedItems])
+
+  useEffect(()=>{
+    if(showUpdateForm) setSelectedItems([]);
+  },[fetchAgain])
 
   return (
     
@@ -117,6 +124,8 @@ export default function Table({records, fetchAgain, setFetchAgain, orderBy,setOr
               ))}
           </tbody>
         </table>
+        {showUpdateForm && <Form fetchAgain = {fetchAgain} setFetchAgain = {setFetchAgain} update = {selectedItems}></Form>}            
+        
         
     </div>
   )

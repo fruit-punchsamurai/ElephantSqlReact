@@ -5,7 +5,7 @@ import axios from "axios";
 
 
 
-export default function Form({fetchAgain,setFetchAgain}){
+export default function Form({fetchAgain,setFetchAgain, update}){
     const[formData,setFormData] = useState({
         rollno:'',
         fname:'',
@@ -13,9 +13,7 @@ export default function Form({fetchAgain,setFetchAgain}){
         address:'',
         department:'',
         age:''
-
     })
-
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -23,10 +21,12 @@ export default function Form({fetchAgain,setFetchAgain}){
     
     const handleSubmit = async (e) => {
         e.preventDefault();
+        const url = update?'http://localhost:5000/update':'http://localhost:5000/submit';
+        const data = update?{...formData,oldrollno:update[0]}:formData;
         try{
-            axios.post('http://localhost:5000/submit',formData)
+            axios.post(url,data)
             .then(res=>{
-              console.log(res);
+                console.log(res);
             })
             setFormData({
                 rollno:'',
@@ -41,27 +41,28 @@ export default function Form({fetchAgain,setFetchAgain}){
         catch(error){
             console.log(error);
         }
+        
       }
    
     return(
-        <div className='Form'>
+        <div className= {update?"updateForm":"Form"}>
             <form onSubmit={handleSubmit}>
-                <label htmlFor = "rollno">Roll No: </label><br />
+                <label htmlFor = "rollno">{update?'New ':''}Roll No: </label><br />
                 <input type = "number" id = "rollno" placeholder=" " name="rollno" onChange = {handleChange} value = {formData.rollno} required></input><br />
                
-                <label htmlFor = "fname">First Name: </label><br />
+                <label htmlFor = "fname">{update?'New ':''}First Name: </label><br />
                 <input type = "text" id = "fname" placeholder=" " name="fname" onChange = {handleChange} value = {formData.fname} maxLength={30} required></input><br />
                 
-                <label htmlFor = "lname">Last Name: </label><br />
+                <label htmlFor = "lname">{update?'New ':''}Last Name: </label><br />
                 <input type = "text" id = "lname" placeholder=" " name="lname" onChange = {handleChange} value = {formData.lname}maxLength={30} required ></input><br />
            
-                <label htmlFor = "address">Address: </label><br />
+                <label htmlFor = "address">{update?'New ':''}Address: </label><br />
                 <input type = "text" id = "address" placeholder=" " name="address" onChange = {handleChange} value = {formData.address} maxLength={30} required></input><br />
                
-                <label htmlFor = "department">Department: </label><br />
+                <label htmlFor = "department">{update?'New ':''}Department: </label><br />
                 <input type = "text" id = "department" placeholder=" " name="department" onChange = {handleChange} value = {formData.department} maxLength={30} required></input><br />
                 
-                <label htmlFor = "age">Age: </label><br />
+                <label htmlFor = "age">{update?'New ':''}Age: </label><br />
                 <input type = "number" id = "age" placeholder=" " name="age" onChange = {handleChange} value = {formData.age} maxLength={30} required></input><br />
 
                 <br />
